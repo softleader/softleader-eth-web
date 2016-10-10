@@ -1,27 +1,27 @@
 package tw.com.softleader.ethweb.eth;
 
 import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.ethereum.core.CallTransaction;
 import org.ethereum.core.CallTransaction.Param;
 import org.spongycastle.util.encoders.Hex;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import tw.com.softleader.ethweb.eth.model.LogTest;
+
 public class ContractLoader {
   
   public final CallTransaction.Contract contract01;
+  private final static ObjectMapper mapper = new ObjectMapper();
   
   public ContractLoader() {
     CallTransaction.Contract contract = null;
@@ -42,21 +42,17 @@ public class ContractLoader {
     }
   }
   
-  public <T> T invocationToPojo(CallTransaction.Invocation invocation, Supplier<T> pojoSupplier) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-    T pojo = pojoSupplier.get();
-    PropertyDescriptor[] pojoPDs = Introspector.getBeanInfo(pojo.getClass()).getPropertyDescriptors();
-    Map<String, PropertyDescriptor> groupdPDs = Stream.of(pojoPDs).collect(Collectors.toMap(PropertyDescriptor::getName, pd -> pd));
+  public <T> T invocationToPojo(CallTransaction.Invocation invocation, Class<T> clazz) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     
+    Map<String, Object> map = new HashMap<>();
     for (int i = 0; i < invocation.function.inputs.length; i++) {
       final Param param = invocation.function.inputs[i];
       final Object arg = invocation.args[i];
-
-      final Method setter = groupdPDs.get(param.name).getWriteMethod();
       final Object value = parse(param, arg);
-      setter.invoke(pojo, value);
+      map.put(param.name, value);
     }
-    System.out.println(invocation);
-    return pojo;
+    
+    return mapper.convertValue(map, clazz);
   }
   
   public String invocationToString(CallTransaction.Invocation invocation) {
@@ -101,6 +97,34 @@ public class ContractLoader {
 //    if ("bytes".equals(typeName)) return new BytesType();
 //    if (typeName.startsWith("bytes")) return new Bytes32Type(typeName);
 //    throw new RuntimeException("Unknown type: " + typeName);
+  }
+  
+  public static void main(String[] args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException {
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("sender", "AAA");
+    map.put("bo", true);
+    map.put("i", 7);
+    map.put("by", (byte) 1);
+    
+//    LogTest pojo = new LogTest();
+//    PropertyDescriptor[] pds = Introspector.getBeanInfo(LogTest.class).getPropertyDescriptors();
+//    for (PropertyDescriptor pd : pds) {
+//      String name = pd.getName();
+//      
+//      if (name.equals("class")) {
+//        continue;
+//      }
+//      
+//      Object value = map.get(name);
+//      System.out.println(name + " = " + value);
+//      Method setter = pd.getWriteMethod();
+//      setter.invoke(pojo, setter.getParameterTypes()[0].cast(value));
+//    }
+    
+    LogTest pojo = mapper.convertValue(map, LogTest.class);
+    System.out.println(pojo);
+    
   }
 
 }
