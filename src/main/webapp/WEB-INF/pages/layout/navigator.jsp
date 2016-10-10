@@ -4,11 +4,14 @@
 
 <div class="ui fixed main menu">
 	<div class="ui container">
-		<a class="launch icon item" id="menuBtn">
-			<i class="content icon"></i>&nbsp;Menu
-		</a>
-		<div class="item" id="pageTitile"></div>
-	
+		<div class="item" style="padding-top: 0px; padding-bottom: 0px;">
+			<a class="ui logo icon" href="<c:url value="/"/>">
+				<svg width="50" height="50">
+					<image xlink:href="<c:url value="/images/softleader_logo.svg"/>" x="0" y="0" width="100%" height="100%"></image>
+				</svg>
+			</a>
+			<a href="<c:url value="/"/>"><b>Softleader Eth Web</b></a>
+		</div>
 		<sec:authentication property="principal" var="userDetail" />
 		<div class="ui simple dropdown right item">
 			<i class="setting icon"></i>
@@ -19,18 +22,6 @@
 			</div>
 		</div>
 	</div>
-</div>
-
-<div class="ui vertical sidebar large menu left" id="nav">
-	<div class="item">
-		<a class="ui logo icon" href="<c:url value="/"/>">
-			<svg width="50" height="50">
-				<image xlink:href="<c:url value="/images/softleader_logo.svg"/>" x="0" y="0" width="100%" height="100%"></image>
-			</svg>
-		</a>
-		<a href="<c:url value="/"/>"><b>Softleader Eth Web</b></a>
-	</div>
-	<a class="item" href="<c:url value="/tx"/>">Dashboard</a>
 </div>
 
 <form hidden id="logout" action="<c:url value="/logout" />" method="post">
@@ -50,16 +41,6 @@ $(function() {
 	$('#logoutLink').bind('click', function() {
 		$('#logout').submit();
 	});
-	
-	// 初始化導覽列
-	$('#nav')
-		.sidebar({
-			context: $('body'),
-			transition: 'overlay',
-			silent: true
-		})
-		.sidebar('attach events', '#menuBtn');
-	
 })
 	
 </script>

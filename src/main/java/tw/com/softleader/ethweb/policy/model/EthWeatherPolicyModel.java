@@ -1,4 +1,4 @@
-package tw.com.softleader.ethweb.model;
+package tw.com.softleader.ethweb.policy.model;
 
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -29,6 +29,7 @@ public class EthWeatherPolicyModel {
   public EthWeatherPolicy toEntity() {
     EthWeatherPolicy entity = new EthWeatherPolicy();
     
+    entity.setCreatedTime(LocalDateTime.now());
     entity.setInsAddress(applyAddress);
     entity.setContractAddress(contractOwner);
     entity.setAmount(amount.longValue());

@@ -17,11 +17,6 @@ public class TxController {
   @Autowired
   protected Ethereum ethereum;
   
-  @RequestMapping
-  public String txPage() {
-    return "/tx/tx_main";
-  }
-
   @RequestMapping("/logs")
   @ResponseBody
   public List<String> txLogs() {

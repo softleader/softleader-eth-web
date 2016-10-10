@@ -7,8 +7,8 @@
 
 <style>
 .ui.main.container {
-	padding-top: 4em;
-	padding-bottom: 4em;
+	padding-top: 6em;
+	padding-bottom: 6em;
 }
 
 .message[name="msgbox"] {

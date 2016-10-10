@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -39,7 +36,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import com.google.common.collect.Maps;
 
 import lombok.extern.slf4j.Slf4j;
-import tw.com.softleader.commons.collect.Sets;
 import tw.com.softleader.ethweb.eth.model.BlockInfo;
 import tw.com.softleader.ethweb.eth.model.TxPackage;
 
@@ -49,8 +45,6 @@ public class EthereumAdapter implements Runnable {
   public static final List<String> txLogs = new ArrayList<>();
 
   private static final Map<String, Consumer<LogInfo>> eventCallbacks = Maps.newHashMap();
-  private static final Set<String> eventAddrSet = Sets.newHashSet();
-  private static final ExecutorService eventExecutor = Executors.newSingleThreadExecutor();
 
   @Autowired
   protected Ethereum ethereum;
@@ -266,7 +260,6 @@ public class EthereumAdapter implements Runnable {
   
   public void watchEvent(String address, Consumer<LogInfo> consumer) {
     eventCallbacks.put(address.toUpperCase(), consumer);
-    eventAddrSet.addAll(eventCallbacks.keySet());
   }
 
   /**
