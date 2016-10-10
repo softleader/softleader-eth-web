@@ -50,7 +50,7 @@ public class EthereumAdapter implements Runnable {
 
   private static final Map<String, Consumer<LogInfo>> eventCallbacks = Maps.newHashMap();
   private static final Set<String> eventAddrSet = Sets.newHashSet();
-  private static final ExecutorService eventExecutor = Executors.newFixedThreadPool(5);
+  private static final ExecutorService eventExecutor = Executors.newSingleThreadExecutor();
 
   @Autowired
   protected Ethereum ethereum;
@@ -364,7 +364,7 @@ public class EthereumAdapter implements Runnable {
       summary.getLogs().stream()
           .filter(l -> eventAddrSet.stream().anyMatch(e -> e.equalsIgnoreCase(Hex.toHexString(l.getAddress()))))
           .forEach(l -> {
-            txLogs.add(contractLoader.invocationToString(contractLoader.contract01.parseEvent(l)));
+//            txLogs.add(contractLoader.invocationToString(contractLoader.contract01.parseEvent(l)));
             eventExecutor.submit(() -> eventCallbacks.get(l.getAddress()).accept(l));
           });
     }

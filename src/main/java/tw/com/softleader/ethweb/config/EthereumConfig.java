@@ -23,7 +23,7 @@ public class EthereumConfig extends DefaultConfig {
     EthereumAdapter adapter = new EthereumAdapter();
     adapter.watchEvent("911B853ddca8e29c2A8015517CFDaD165F33bcBA", Unchecked.accept(l -> {
       LogTest log = contractLoader.invocationToPojo(contractLoader.contract01.parseEvent(l), () -> new LogTest());
-      System.out.println(log);
+      EthereumAdapter.txLogs.add(log.toString());
     }));
     return adapter;
   }
