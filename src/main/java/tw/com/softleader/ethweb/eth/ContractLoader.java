@@ -52,10 +52,10 @@ public class ContractLoader {
       final Object arg = invocation.args[i];
 
       final Method setter = groupdPDs.get(param.name).getWriteMethod();
-      final Object value = setter.getParameterTypes()[0].cast(parse(param, arg));
-      groupdPDs.get(param.name).getWriteMethod().invoke(pojo, value);
+      final Object value = parse(param, arg);
+      setter.invoke(pojo, value);
     }
-    
+    System.out.println(invocation);
     return pojo;
   }
   
