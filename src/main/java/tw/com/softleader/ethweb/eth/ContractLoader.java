@@ -49,6 +49,7 @@ public class ContractLoader {
       final Param param = invocation.function.inputs[i];
       final Object arg = invocation.args[i];
       final Object value = parse(param, arg);
+      System.out.println(param.name + " = " + value);
       map.put(param.name, value);
     }
     
@@ -106,21 +107,6 @@ public class ContractLoader {
     map.put("bo", true);
     map.put("i", 7);
     map.put("by", (byte) 1);
-    
-//    LogTest pojo = new LogTest();
-//    PropertyDescriptor[] pds = Introspector.getBeanInfo(LogTest.class).getPropertyDescriptors();
-//    for (PropertyDescriptor pd : pds) {
-//      String name = pd.getName();
-//      
-//      if (name.equals("class")) {
-//        continue;
-//      }
-//      
-//      Object value = map.get(name);
-//      System.out.println(name + " = " + value);
-//      Method setter = pd.getWriteMethod();
-//      setter.invoke(pojo, setter.getParameterTypes()[0].cast(value));
-//    }
     
     LogTest pojo = mapper.convertValue(map, LogTest.class);
     System.out.println(pojo);

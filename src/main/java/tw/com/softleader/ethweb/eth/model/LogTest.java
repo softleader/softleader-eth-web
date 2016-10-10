@@ -11,11 +11,11 @@ public class LogTest {
   
   private String sender;
   
-  private boolean bo;
+  private Boolean bo;
   
-  private int i;
+  private Integer i;
   
-  private byte by;
+  private Byte by;
   
   private String s;
   
