@@ -265,7 +265,7 @@ public class EthereumAdapter implements Runnable {
   }
   
   public void watchEvent(String address, Consumer<LogInfo> consumer) {
-    eventCallbacks.put(address.toUpperCase(), consumer);
+    eventCallbacks.put(address, consumer);
     eventAddrSet.addAll(eventCallbacks.keySet());
   }
 
@@ -359,9 +359,10 @@ public class EthereumAdapter implements Runnable {
     @Override
     public void onTransactionExecuted(TransactionExecutionSummary summary) {
       summary.getLogs().stream()
-          .filter(l -> eventAddrSet.stream().anyMatch(e -> e.equalsIgnoreCase(Hex.toHexString(l.getAddress()))))
+          .filter(l -> eventAddrSet.stream().anyMatch(e -> e.equals(Hex.toHexString(l.getAddress()))))
           .forEach(l -> {
-            eventExecutor.submit(() -> eventCallbacks.get(Hex.toHexString(l.getAddress()).toUpperCase()).accept(l));
+            System.out.println(Hex.toHexString(l.getAddress()));
+            eventExecutor.submit(() -> eventCallbacks.get(Hex.toHexString(l.getAddress())).accept(l));
           });
     }
   };
