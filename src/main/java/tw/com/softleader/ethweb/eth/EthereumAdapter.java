@@ -360,9 +360,8 @@ public class EthereumAdapter implements Runnable {
     public void onTransactionExecuted(TransactionExecutionSummary summary) {
       for (LogInfo logInfo : summary.getLogs()) {
         String address = Hex.toHexString(logInfo.getAddress()).toUpperCase();
-        if (eventAddrSet.contains(address)) {
-          System.out.println(Hex.toHexString(logInfo.getAddress()));
-          eventExecutor.submit(() -> eventCallbacks.get(address).accept(logInfo));
+        if (eventCallbacks.containsKey(address)) {
+          eventCallbacks.get(address).accept(logInfo);
         }
       }
     }
