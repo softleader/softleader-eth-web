@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd" version="2.1">
+
+	<description>SoftLeader Utils Taglib</description>
+	<display-name>Softleader Utils Taglib</display-name>
+	<tlib-version>1.0</tlib-version>
+	<short-name>utils</short-name>
+	<uri>http://www.softleader.com.tw/tags/utils</uri>
+
+	<function>
+		<name>toListString</name>
+		<function-class>tw.com.softleader.ethweb.utils.MvcUtils</function-class>
+		<function-signature>java.lang.String toListString(java.util.Collection)</function-signature>
+	</function>
+
+</taglib>

@@ -1,0 +1,38 @@
+/* ========== */
+/* Button Up  */
+/* ========== */
+
+.btnToTop {
+    width: 40px;
+    height: 40px;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #2565a5;
+    border-radius: 25px;
+    text-align: center;
+    line-height: 40px;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 999;
+    -webkit-transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease;
+}
+
+.btnToTop:before {
+/* 	content: "\f062"; */
+	content: "\f0aa";
+    display: inline-block;
+    vertical-align: middle;
+    font: 30px 'FontAwesome';
+    color: #fff;
+    margin-top: -2px;
+}
+
+.btnToTop.active {
+    opacity: 1;
+}
+
+.btnToTop.active:hover{
+    background-color: #3072B3;
+}
