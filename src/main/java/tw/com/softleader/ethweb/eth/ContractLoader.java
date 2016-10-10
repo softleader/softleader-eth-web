@@ -84,11 +84,11 @@ public class ContractLoader {
     } else if ("byte".equals(param.getType())) {
       return (byte) arg;
     } else if ("bool".equals(param.getType())) {
-      return (boolean) new Boolean(String.valueOf(arg));
+      return new Boolean(String.valueOf(arg)).booleanValue();
     } else if (param.getType().startsWith("uint")) {
-      return (int) new Integer(String.valueOf(arg));
+      return new Integer(String.valueOf(arg)).intValue();
     } else if (param.getType().startsWith("int")) {
-      return (int) new Integer(String.valueOf(arg));
+      return new Integer(String.valueOf(arg)).intValue();
     } else {
       return String.valueOf(arg);
     }
