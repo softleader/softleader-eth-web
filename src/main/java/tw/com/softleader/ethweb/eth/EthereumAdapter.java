@@ -358,12 +358,14 @@ public class EthereumAdapter implements Runnable {
 
     @Override
     public void onTransactionExecuted(TransactionExecutionSummary summary) {
-      summary.getLogs().stream()
-          .filter(l -> eventAddrSet.stream().anyMatch(e -> e.equals(Hex.toHexString(l.getAddress()).toUpperCase())))
-          .forEach(l -> {
-            eventExecutor.submit(() -> eventCallbacks.get(Hex.toHexString(l.getAddress()).toUpperCase()).accept(l));
-          });
+      for (LogInfo logInfo : summary.getLogs()) {
+        String address = Hex.toHexString(logInfo.getAddress()).toUpperCase();
+        if (eventAddrSet.contains(address)) {
+          System.out.println(Hex.toHexString(logInfo.getAddress()));
+          eventExecutor.submit(() -> eventCallbacks.get(address).accept(logInfo));
+        }
+      }
     }
   };
-
+  
 }
