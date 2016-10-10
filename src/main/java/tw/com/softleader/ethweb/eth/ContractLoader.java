@@ -51,6 +51,7 @@ public class ContractLoader {
       final Object arg = invocation.args[i];
       
       Object value = parse(param, arg);
+      System.out.println(param + " = " + Hex.encode((byte[])arg) + " -> " + value);
       groupdPDs.get(param.name).getWriteMethod().invoke(pojo, value);
     }
     
