@@ -50,8 +50,7 @@ public class EthereumAdapter implements Runnable {
 
   private static final Map<String, Consumer<LogInfo>> eventCallbacks = Maps.newHashMap();
   private static final Set<String> eventAddrSet = Sets.newHashSet();
-  
-  private static final ExecutorService eventExecutor = Executors.newSingleThreadExecutor();
+  private static final ExecutorService eventExecutor = Executors.newFixedThreadPool(5);
 
   @Autowired
   protected Ethereum ethereum;
