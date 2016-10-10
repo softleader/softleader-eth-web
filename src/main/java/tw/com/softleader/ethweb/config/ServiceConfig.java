@@ -8,7 +8,7 @@ import tw.com.softleader.ethweb.eth.ContractLoader;
 import tw.com.softleader.security.supplier.CurrentUsernameSupplier;
 
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-@ComponentScan(basePackages = {"tw.com.softleader.ethweb.**.service", "tw.com.softleader.ethweb.**.web"})
+@ComponentScan(basePackages = {"tw.com.softleader.ethweb.**.service"})
 public class ServiceConfig {
 
   @Bean

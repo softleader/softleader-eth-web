@@ -14,24 +14,24 @@ import tw.com.softleader.data.entity.GenericCodeEntity;
 public abstract class EthPolicy extends GenericCodeEntity<Long> {
   
   @Column(name = "INS_ADDRESS", length = 40, updatable = false)
-  private String insAddress; // 被保人錢包
+  protected String insAddress; // 被保人錢包
   
   @Column(name = "CONTRACT_ADDRESS", length = 40, updatable = false)
-  private String contractAddress; // 合約地址
+  protected String contractAddress; // 合約地址
   
   @Column(name = "AMOUNT")
-  private long amount; // 保額
+  protected long amount; // 投保金額
   
   @Column(name = "APPLY_DATE")
-  private LocalDate applyDate;
+  protected LocalDate applyDate; // 申請日
   
   @Column(name = "EFF_DATE")
-  private LocalDate effDate;
+  protected LocalDate effDate; // 生效日
   
   @Column(name = "EXP_DATE")
-  private LocalDate expDate;
+  protected LocalDate expDate; // 失效日
   
   @Column(name = "COMPENSATED")
-  private boolean compensated;
+  protected boolean compensated; // 已理賠
   
 }

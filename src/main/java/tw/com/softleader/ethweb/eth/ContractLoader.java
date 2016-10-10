@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ContractLoader {
   
-  public final CallTransaction.Contract contract01;
+  public final CallTransaction.Contract weatherPolicy;
   private final static ObjectMapper mapper = new ObjectMapper();
   
   public ContractLoader() {
@@ -28,7 +28,7 @@ public class ContractLoader {
           new String(
               Files.readAllBytes(
                   Paths.get(
-                      EthereumAdapter.class.getClassLoader().getResource("contract/contract01.json").toURI()
+                      EthereumAdapter.class.getClassLoader().getResource("contract/WeatherPolicy.json").toURI()
                   )
               )
           )
@@ -36,7 +36,7 @@ public class ContractLoader {
     } catch (IOException | URISyntaxException e) {
       e.printStackTrace();
     } finally {
-      contract01 = contract;
+      weatherPolicy = contract;
     }
   }
   

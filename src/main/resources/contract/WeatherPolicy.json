@@ -1,0 +1,44 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "contractOwner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "applyAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "applyDate",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "effDate",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "weatherType",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "compensated",
+        "type": "bool"
+      }
+    ],
+    "name": "InfoPolicy",
+    "type": "event"
+  }
+]
