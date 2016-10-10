@@ -3,6 +3,7 @@ package tw.com.softleader.ethweb.eth;
 import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -82,9 +83,9 @@ public class ContractLoader {
     } else if ("bool".equals(param.getType())) {
       return new Boolean(String.valueOf(arg));
     } else if (param.getType().startsWith("uint")) {
-      return new Integer(String.valueOf(arg));
+      return new BigDecimal(String.valueOf(arg));
     } else if (param.getType().startsWith("int")) {
-      return new Integer(String.valueOf(arg));
+      return new BigDecimal(String.valueOf(arg));
     } else {
       return String.valueOf(arg);
     }

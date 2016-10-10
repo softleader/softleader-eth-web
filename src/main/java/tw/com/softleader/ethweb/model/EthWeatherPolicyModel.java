@@ -1,5 +1,6 @@
 package tw.com.softleader.ethweb.model;
 
+import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ public class EthWeatherPolicyModel {
   
   private String contractOwner;
   
-  private int amount;
+  private BigDecimal amount;
   
   private int applyDate;
   
@@ -30,7 +31,7 @@ public class EthWeatherPolicyModel {
     
     entity.setInsAddress(applyAddress);
     entity.setContractAddress(contractOwner);
-    entity.setAmount(amount);
+    entity.setAmount(amount.longValue());
     entity.setApplyDate(LocalDateTime.ofInstant(Instant.ofEpochSecond(applyDate), Clock.systemUTC().getZone()).toLocalDate());
     entity.setEffDate(LocalDateTime.ofInstant(Instant.ofEpochSecond(effDate), Clock.systemUTC().getZone()).toLocalDate());
     entity.setExpDate(LocalDateTime.ofInstant(Instant.ofEpochSecond(effDate), Clock.systemUTC().getZone()).toLocalDate());
