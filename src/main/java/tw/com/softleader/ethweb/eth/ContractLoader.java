@@ -16,8 +16,6 @@ import org.spongycastle.util.encoders.Hex;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import tw.com.softleader.ethweb.eth.model.LogTest;
-
 public class ContractLoader {
   
   public final CallTransaction.Contract contract01;
@@ -79,13 +77,13 @@ public class ContractLoader {
     } else if ("bytes32".equals(param.getType())) {
       return (byte[]) arg;
     } else if ("byte".equals(param.getType())) {
-      return (byte) arg;
+      return new Byte(String.valueOf(arg));
     } else if ("bool".equals(param.getType())) {
-      return new Boolean(String.valueOf(arg)).booleanValue();
+      return new Boolean(String.valueOf(arg));
     } else if (param.getType().startsWith("uint")) {
-      return new Integer(String.valueOf(arg)).intValue();
+      return new Integer(String.valueOf(arg));
     } else if (param.getType().startsWith("int")) {
-      return new Integer(String.valueOf(arg)).intValue();
+      return new Integer(String.valueOf(arg));
     } else {
       return String.valueOf(arg);
     }
@@ -100,17 +98,4 @@ public class ContractLoader {
 //    throw new RuntimeException("Unknown type: " + typeName);
   }
   
-  public static void main(String[] args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException {
-    
-    Map<String, Object> map = new HashMap<>();
-    map.put("sender", "AAA");
-    map.put("bo", true);
-    map.put("i", 7);
-    map.put("by", (byte) 1);
-    
-    LogTest pojo = mapper.convertValue(map, LogTest.class);
-    System.out.println(pojo);
-    
-  }
-
 }
