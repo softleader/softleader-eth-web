@@ -1,45 +1,43 @@
 [
-   {
-      "constant":false,
-      "inputs":[
-
-      ],
-      "name":"log",
-      "outputs":[
-
-      ],
-      "type":"function"
-   },
-   {
-      "anonymous":false,
-      "inputs":[
-         {
-            "indexed":false,
-            "name":"sender",
-            "type":"address"
-         },
-         {
-            "indexed":false,
-            "name":"bo",
-            "type":"bool"
-         },
-         {
-            "indexed":false,
-            "name":"i",
-            "type":"uint8"
-         },
-         {
-            "indexed":false,
-            "name":"by",
-            "type":"bytes32"
-         },
-         {
-            "indexed":false,
-            "name":"s",
-            "type":"string"
-         }
-      ],
-      "name":"logEvent",
-      "type":"event"
-   }
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "log",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "showE",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "bo",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "name": "i",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "name": "s",
+        "type": "string"
+      }
+    ],
+    "name": "logEvent",
+    "type": "event"
+  }
 ]

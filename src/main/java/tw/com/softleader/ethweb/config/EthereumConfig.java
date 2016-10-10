@@ -21,7 +21,7 @@ public class EthereumConfig extends DefaultConfig {
   @Bean
   public EthereumAdapter ethereumAdapter() {
     EthereumAdapter adapter = new EthereumAdapter();
-    adapter.watchEvent("911B853ddca8e29c2A8015517CFDaD165F33bcBA", Unchecked.accept(l -> {
+    adapter.watchEvent("c153F8cF2116156a323B346326e3f1b0B34C937B", Unchecked.accept(l -> {
       LogTest log = contractLoader.invocationToPojo(contractLoader.contract01.parseEvent(l), LogTest.class);
       EthereumAdapter.txLogs.add(log.toString());
     }));

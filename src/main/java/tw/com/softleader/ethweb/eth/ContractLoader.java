@@ -77,6 +77,7 @@ public class ContractLoader {
     } else if ("bytes32".equals(param.getType())) {
       return (byte[]) arg;
     } else if ("byte".equals(param.getType())) {
+      // FIXME still mismatch
       return new Byte(String.valueOf(arg));
     } else if ("bool".equals(param.getType())) {
       return new Boolean(String.valueOf(arg));
@@ -87,15 +88,6 @@ public class ContractLoader {
     } else {
       return String.valueOf(arg);
     }
-//    return CallTransaction.Type.getType(param.getType()).decode((byte[]) arg).toString();
-//    if (typeName.contains("[")) return ArrayType.getType(typeName);
-//    if ("bool".equals(typeName)) return new BoolType();
-//    if (typeName.startsWith("int") || typeName.startsWith("uint")) return new IntType(typeName);
-//    if ("address".equals(typeName)) return new AddressType();
-//    if ("string".equals(typeName)) return new StringType();
-//    if ("bytes".equals(typeName)) return new BytesType();
-//    if (typeName.startsWith("bytes")) return new Bytes32Type(typeName);
-//    throw new RuntimeException("Unknown type: " + typeName);
   }
   
 }
