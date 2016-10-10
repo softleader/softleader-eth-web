@@ -62,9 +62,6 @@ public class EthereumAdapter implements Runnable {
   protected SystemProperties config;
 
   @Autowired
-  private ContractLoader contractLoader;
-  
-  @Autowired
   private SimpMessagingTemplate msgSender;
   
   private volatile long txCount;
@@ -364,8 +361,7 @@ public class EthereumAdapter implements Runnable {
       summary.getLogs().stream()
           .filter(l -> eventAddrSet.stream().anyMatch(e -> e.equalsIgnoreCase(Hex.toHexString(l.getAddress()))))
           .forEach(l -> {
-//            txLogs.add(contractLoader.invocationToString(contractLoader.contract01.parseEvent(l)));
-            eventExecutor.submit(() -> eventCallbacks.get(l.getAddress()).accept(l));
+            eventExecutor.submit(() -> eventCallbacks.get(Hex.toHexString(l.getAddress())).accept(l));
           });
     }
   };
