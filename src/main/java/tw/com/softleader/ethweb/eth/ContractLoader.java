@@ -5,6 +5,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -49,9 +50,9 @@ public class ContractLoader {
     for (int i = 0; i < invocation.function.inputs.length; i++) {
       final Param param = invocation.function.inputs[i];
       final Object arg = invocation.args[i];
-      
-      Object value = parse(param, arg);
-      System.out.println(param + " = " + Hex.encode((byte[])arg) + " -> " + value);
+
+      final Method setter = groupdPDs.get(param.name).getWriteMethod();
+      final Object value = setter.getParameterTypes()[0].cast(parse(param, arg));
       groupdPDs.get(param.name).getWriteMethod().invoke(pojo, value);
     }
     
