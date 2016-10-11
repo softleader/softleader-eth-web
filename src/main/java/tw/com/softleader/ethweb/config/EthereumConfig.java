@@ -39,7 +39,7 @@ public class EthereumConfig extends DefaultConfig {
       EthWeatherPolicyModel model = contractLoader.invocationToPojo(contractLoader.weatherPolicy.parseEvent(l), EthWeatherPolicyModel.class);
       EthWeatherPolicy entity = model.toEntity();
       EthereumAdapter.txLogs.add(model.toEntity().toString());
-      ethPolicyService.datas.add(entity);
+      ethPolicyService.insert(entity);
       msgSender.convertAndSend("/topic/onevent", entity);
     }));
     return adapter;

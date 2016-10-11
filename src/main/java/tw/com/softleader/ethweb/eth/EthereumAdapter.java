@@ -299,8 +299,6 @@ public class EthereumAdapter implements Runnable {
       }
       if (syncComplete) {
         log.info("New block. peers: " + syncPeerCnt.get() + " block: " + block.getShortDescr());
-        // logger.info("PendingStateTransactions: " +
-        // ethereum.getPendingStateTransactions().size());
 
         while(!txs.isEmpty()) {
           TxPackage txp = txs.pop();

@@ -57,17 +57,17 @@
 		<div class="ui blue segment">
 			<div class="ui list" id="policyList">
 				<c:forEach items="${policys}" var="item">
-					<div class="item">
+					<div class="item" id="${item.insAddress}">
 						<i class="green checkmark box icon"></i>
 						<div class="content">
-							<a class="header">Address: ${item.applyAddress}</a>
+							<a class="header" href="https://morden.ether.camp/account/${item.insAddress}" target="_blank">Address: 0x${item.insAddress}</a>
 							<div class="meta">
-				        		<span class="eff">${item.effDate}</span>
-				        		<span class="weather">${item.weatherType}</span>
+				        		<span>ApplyDate: ${item.applyDate}</span>
+				        		<span>Compensated: ${item.compensated}</span>
 							</div>
 							<div class="description">
-								<p>ApplyDate: ${item.applyDate}</p>
-								<p>Compensated: ${item.compensated}</p>
+								<span>EffDate: ${item.effDate}</span>
+								<span>Weather: ${item.weatherType}</span>
 							</div>
 						</div>
 					</div>
@@ -82,17 +82,17 @@
 </body>
 
 <script type="text/template" id="policyItem">
-	<div class="item">
+	<div class="item" id="#insAddress#">
 		<i class="green checkmark box icon"></i>
 		<div class="content">
-			<a class="header">Address: #applyAddress#</a>
+			<a class="header" href="https://morden.ether.camp/account/#insAddress#" target="_blank">Address: 0x#insAddress#</a>
 			<div class="meta">
-        		<span class="eff">#effDate#</span>
-        		<span class="weather">#weatherType#</span>
+        		<span>ApplyDate: #applyDate#</span>
+        		<span>Compensated: #compensated#</span>
 			</div>
 			<div class="description">
-				<p>ApplyDate: #applyDate#</p>
-				<p>Compensated: #compensated#</p>
+				<span>EffDate: #effDate#</span>
+				<span>Weather: #weatherType#</span>
 			</div>
 		</div>
 	</div>
@@ -128,14 +128,31 @@ $(function() {
 		// 頻道訂閱:onevent
 		client.subscribe('/topic/onevent', function(data) {
 			var ethWeatherPolicy = JSON.parse(data.body);
-			$($('#policyItem').html()
-				.replace(/#applyAddress#/g, ethWeatherPolicy.applyAddress)
+			if ($('#' + ethWeatherPolicy.insAddress).length > 0) {
+				$('#' + ethWeatherPolicy.insAddress).transition({
+					animation: 'fade left',
+					onComplete: function() {
+						$(this).remove();
+						insertItem(ethWeatherPolicy);
+					}
+				});
+			} else {
+				insertItem(ethWeatherPolicy);
+			}
+	    });
+		
+		function insertItem(ethWeatherPolicy) {
+			var $itemContent = $($('#policyItem').html()
+				.replace(/#insAddress#/g, ethWeatherPolicy.insAddress)
 				.replace(/#effDate#/g, ethWeatherPolicy.effDate)
 				.replace(/#weatherType#/g, ethWeatherPolicy.weatherType)
 				.replace(/#applyDate#/g, ethWeatherPolicy.applyDate)
 				.replace(/#compensated#/g, ethWeatherPolicy.compensated)
-			).prepend($('#policyList'));
-	    });
+			).hide();
+			
+			$('#policyList').prepend($itemContent);
+			$itemContent.transition('fade left');
+		}
 	});
 	
 	// 同步歷時

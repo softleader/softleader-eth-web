@@ -2,7 +2,11 @@ package tw.com.softleader.ethweb.config;
 
 import javax.servlet.Filter;
 import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration.Dynamic;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -41,4 +45,21 @@ public class WebApplicationInitializer
         new MultipartConfigElement(location, maxFileSize, maxRequestSize, fileSizeThreshold));
   }
   
+  @Override
+  public void onStartup(ServletContext servletContext) throws ServletException {
+      super.onStartup(servletContext);
+      servletContext.addListener(new HttpSessionListener() {
+        
+        @Override
+        public void sessionCreated(HttpSessionEvent event) {
+          event.getSession().setMaxInactiveInterval(5*60);
+        }
+        
+        @Override
+        public void sessionDestroyed(HttpSessionEvent event) {
+          // do nothing
+        }
+        
+      });
+  }
 }

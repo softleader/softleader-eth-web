@@ -17,6 +17,9 @@ import org.spongycastle.util.encoders.Hex;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ContractLoader {
   
   public final CallTransaction.Contract weatherPolicy;
@@ -48,7 +51,7 @@ public class ContractLoader {
       final Param param = invocation.function.inputs[i];
       final Object arg = invocation.args[i];
       final Object value = parse(param, arg);
-      System.out.println(param.name + " = " + value);
+      log.debug("parsing ethtereum event: param.name= {}, value={}", param.name, value);
       map.put(param.name, value);
     }
     

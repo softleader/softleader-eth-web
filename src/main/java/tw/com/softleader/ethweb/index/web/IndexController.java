@@ -1,6 +1,5 @@
 package tw.com.softleader.ethweb.index.web;
 
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,7 @@ public class IndexController {
 
   @RequestMapping("/")
   public String index(Model model) {
-    List<EthWeatherPolicy> policys = ethPolicyService.datas;
-    policys.sort(Comparator.comparing(EthWeatherPolicy::getCreatedTime).reversed());
+    List<EthWeatherPolicy> policys = ethPolicyService.getAll();
     model.addAttribute("policys", policys);
     return "index";
   }

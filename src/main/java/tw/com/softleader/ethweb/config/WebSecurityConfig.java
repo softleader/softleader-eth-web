@@ -2,7 +2,9 @@ package tw.com.softleader.ethweb.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
 import tw.com.softleader.ethweb.security.service.UserDetailsService;
 import tw.com.softleader.security.authentication.MoreDetailsBinder;
@@ -29,5 +31,12 @@ public class WebSecurityConfig extends MoreWebSecurityConfiguration {
   @Bean
   public CurrentUsernameSupplier currentUsernameSupplier() {
     return new CurrentUsernameSupplier();
+  }
+  
+  @Override
+  protected void authorizeRequests(
+      ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authorizeRequests) {
+    authorizeRequests.antMatchers("/**").permitAll().anyRequest()
+    .authenticated();
   }
 }

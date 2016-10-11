@@ -29,7 +29,6 @@ public class EthWeatherPolicyModel {
   public EthWeatherPolicy toEntity() {
     EthWeatherPolicy entity = new EthWeatherPolicy();
     
-    entity.setCreatedTime(LocalDateTime.now());
     entity.setInsAddress(applyAddress);
     entity.setContractAddress(contractOwner);
     entity.setAmount(amount.longValue());
