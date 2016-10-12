@@ -1,6 +1,7 @@
 package tw.com.softleader.ethweb.tx.web;
 
-import java.time.ZoneOffset;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -30,17 +31,34 @@ public class TxController {
   @Autowired
   private TxService txService;
   
-//  @Autowired
-//  private WeatherService weatherService;
+  @Autowired
+  private WeatherService weatherService;
 
-  @RequestMapping("/renew/weather/{date}/{weather}")
+  @RequestMapping("/renew/weather")
   @ResponseBody
-  public AjaxResponse<WeatherType> renewWeather(@PathVariable ZonedDateTime date, @PathVariable WeatherType weather) {
-//    ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
+  public AjaxResponse<WeatherType> renewWeather() {
+    ZonedDateTime date = LocalDate.now().atStartOfDay().atZone(ZoneId.of("UTC"));
     AjaxResponse<WeatherType> response = new AjaxResponse<>();
     
     try {
-//      WeatherType weather = weatherService.getTodayWeather(utcToday);
+      WeatherType weather = weatherService.getTodayWeather(date);
+      CallTransaction.Function function = CallTransaction.Function.fromSignature("insertWeather", "uint", "string");
+      txService.addCallTx(env.getProperty("eth.contract.address"), function, date.toInstant().getEpochSecond(), weather.toString());
+      response.setData(weather);
+    } catch (Exception e) {
+      log.error("RenewWeather fail", e);
+      response.addException(e);
+    }
+    return response;
+  }
+
+  @RequestMapping("/renew/weather/{date}/{weather}")
+  @ResponseBody
+  public AjaxResponse<WeatherType> renewWeather(@PathVariable String dateStr, @PathVariable WeatherType weather) {
+    ZonedDateTime date = LocalDate.parse(dateStr).atStartOfDay().atZone(ZoneId.of("UTC"));
+    AjaxResponse<WeatherType> response = new AjaxResponse<>();
+    
+    try {
       CallTransaction.Function function = CallTransaction.Function.fromSignature("insertWeather", "uint", "string");
       txService.addCallTx(env.getProperty("eth.contract.address"), function, date.toInstant().getEpochSecond(), weather.toString());
       response.setData(weather);
@@ -56,5 +74,5 @@ public class TxController {
   public AjaxResponse<List<String>> txLogs() {
     return new AjaxResponse<>(EthereumAdapter.txLogs);
   }
-
+  
 }
