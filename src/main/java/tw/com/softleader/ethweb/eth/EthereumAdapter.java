@@ -39,6 +39,11 @@ import lombok.extern.slf4j.Slf4j;
 import tw.com.softleader.ethweb.eth.model.BlockInfo;
 import tw.com.softleader.ethweb.eth.model.TxPackage;
 
+/**
+ * 這隻程式用來管理Ethereum流程上所有事項
+ * 並附帶一支listener，在event觸發的時候會被呼叫
+ * 改寫自@See BasicSample
+ */
 @Slf4j
 public class EthereumAdapter implements Runnable {
   public static final Stack<TxPackage> txs = new Stack<>();
@@ -246,10 +251,6 @@ public class EthereumAdapter implements Runnable {
         return;
       }
 
-//      BlockInfo msgBlock = new BlockInfo(bestBlock, syncPeerCnt.get(), syncManager.getLastKnownBlockNumber());
-//      msgBlock.setTxSize(txCount);
-//      msgBlock.setGasUsed(gasSpent);
-//      msgSender.convertAndSend("/topic/onblock", msgBlock);
       log.info("Blockchain syncing. peers: " + syncPeerCnt.get() + ". Last imported block: "
           + bestBlock.getShortDescr() + " (Total: txs: " + txCount + ", gas: " + (gasSpent / 1000)
           + "k)");
@@ -291,33 +292,44 @@ public class EthereumAdapter implements Runnable {
 
     @Override
     public void onBlock(Block block, List<TransactionReceipt> receipts) {
+      // 區塊更新時，同時發布訊息至webSocket
       msgSender.convertAndSend("/topic/onblock", new BlockInfo(block, syncPeerCnt.get(), syncManager.getLastKnownBlockNumber()));
       bestBlock = block;
-      txCount += receipts.size();
-      for (TransactionReceipt receipt : receipts) {
-        gasSpent += ByteUtil.byteArrayToLong(receipt.getGasUsed());
-      }
+      
+      // 有些行為必須在sync到最新block後在進行會比較好，例如log的顯示
       if (syncComplete) {
         log.info("New block. peers: " + syncPeerCnt.get() + " block: " + block.getShortDescr());
 
+        // 由程式發布的交易會先暫時包裝成TxPackage
+        // 於sync完成後，取出來呼叫
         while(!txs.isEmpty()) {
-          TxPackage txp = txs.pop();
+          // 產生交易資料
+          final TxPackage txp = txs.pop();
+          final Transaction tx;
           final long nonce = ethereum.getRepository().getNonce(txp.getEcKey().getAddress()).longValue();
           final long gasLimit = Long.parseLong(Hex.toHexString(ethereum.getBlockchain().getBestBlock().getGasLimit()), 16);
           final long gas = (long) (gasLimit * txp.getGasRatio());
-          
-          final Transaction tx;
           if (txp.getFunction() == null) {
             tx = CallTransaction.createRawTransaction(nonce, ethereum.getGasPrice(), gas, txp.getToAddress(), txp.getValue(), null);
           } else {
             tx = CallTransaction.createCallTransaction(nonce, ethereum.getGasPrice(), gas, txp.getToAddress(), txp.getValue(), txp.getFunction(), txp.getArgs());
           }
           
+          // 對交易簽名
           tx.sign(txp.getEcKey());
           log.info("Sending Transaction: nonce:{}, value:{}, Gas:{}, GasPrice:{}, GasLimit{}", nonce, txp.getValue(), gas, ethereum.getGasPrice(), gasLimit);
+          
+          // 發送交易
           ethereum.submitTransaction(tx);
         }
 
+      } else {
+        // sync完成前，log每十秒會回報一次sync的進度
+        // 此處用來統計至下次sync之間產生了多少次交易與消耗了多少Gas
+        txCount += receipts.size();
+        for (TransactionReceipt receipt : receipts) {
+          gasSpent += ByteUtil.byteArrayToLong(receipt.getGasUsed());
+        }
       }
     }
 
@@ -349,6 +361,7 @@ public class EthereumAdapter implements Runnable {
 
     @Override
     public void onTransactionExecuted(TransactionExecutionSummary summary) {
+      // 當每一次處理到交易時，依據EthereumConfig所註冊的監看事件來篩選出需要監看的交易結果
       for (LogInfo logInfo : summary.getLogs()) {
         String address = Hex.toHexString(logInfo.getAddress()).toUpperCase();
         if (eventCallbacks.containsKey(address)) {

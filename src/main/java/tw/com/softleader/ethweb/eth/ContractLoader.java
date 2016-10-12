@@ -19,12 +19,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 此程式用來載入合約的界面，並且執行一切與合約介面有關的轉換
+ */
 @Slf4j
 public class ContractLoader {
   
+  /** 本次Demo用的天氣合約 */
   public final CallTransaction.Contract weatherPolicy;
+  /** 借用來轉換的Jackson ObjectMapper */
   private final static ObjectMapper mapper = new ObjectMapper();
   
+  /** 初始化 */
   public ContractLoader() {
     CallTransaction.Contract contract = null;
     try {
@@ -44,6 +50,12 @@ public class ContractLoader {
     }
   }
   
+  /**
+   * 將invocation的內容轉換為Pojo
+   * @param invocation 透過合約介面讀取logInfo所產生
+   * @param clazz Pojo的Class
+   * @return Pojo
+   */
   public <T> T invocationToPojo(CallTransaction.Invocation invocation, Class<T> clazz) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     
     Map<String, Object> map = new HashMap<>();
@@ -58,6 +70,10 @@ public class ContractLoader {
     return mapper.convertValue(map, clazz);
   }
   
+  /**
+   * 將invocation的內容轉換為單純的String
+   * @param invocation 透過合約介面讀取logInfo所產生
+   */
   public String invocationToString(CallTransaction.Invocation invocation) {
     return "[" + "contract=" + invocation.contract +
             (invocation.function.type + "= ") + invocation.function + ", args=" + parseArgsToString(invocation) + ']';

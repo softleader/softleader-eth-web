@@ -17,6 +17,12 @@ public class TxService {
   @Autowired
   private Environment env;
   
+  /**
+   * 發送交易(執行function)
+   * @param address 交易目的地地址
+   * @param function 要呼叫的函式
+   * @param args 函式所需的參數
+   */
   public void addCallTx(String address, CallTransaction.Function function, Object... args) {
     FileSystemKeystore keystore = new FileSystemKeystore(env.getProperty("eth.keystoreDir"));
     ECKey ecKey = keystore.loadStoredKey(env.getProperty("eth.keystore.address"), env.getProperty("eth.keystore.password"));
@@ -24,20 +30,16 @@ public class TxService {
     EthereumAdapter.txs.push(tx);
   }
   
+  /**
+   * 發送一般交易
+   * @param address 交易目的地地址
+   * @param wei 要傳送的eth(單位wei)
+   */
   public void addTx(String address, long wei) {
     FileSystemKeystore keystore = new FileSystemKeystore(env.getProperty("eth.keystoreDir"));
     ECKey ecKey = keystore.loadStoredKey(env.getProperty("eth.keystore.address"), env.getProperty("eth.keystore.password"));
     TxPackage tx = new TxPackage(address, ecKey, 0.7, wei);
     EthereumAdapter.txs.push(tx);
   }
-  
-//  FileSystemKeystore keystore = new FileSystemKeystore(env.getProperty("eth.keystoreDir"));
-//  ECKey ecKey = keystore.loadStoredKey(env.getProperty("eth.keystore.address"), env.getProperty("eth.keystore.password"));
-//  
-//  String toAddress = "3B584F3d1E4F4462B684bEE0f7Fb96D03b807C0F";
-//  CallTransaction.Function function = CallTransaction.Function.fromSignature("deposit", "bytes32");
-//  TxPackage tx = new TxPackage(toAddress, ecKey, function, 0.7, 0L, message);
-//
-//  EthereumAdapter.txs.add(tx);
 
 }

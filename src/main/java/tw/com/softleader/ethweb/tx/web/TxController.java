@@ -34,6 +34,9 @@ public class TxController {
   @Autowired
   private WeatherService weatherService;
 
+  /**
+   * 更新今日天氣至合約上
+   */
   @RequestMapping("/renew/weather")
   @ResponseBody
   public AjaxResponse<WeatherType> renewWeather() {
@@ -41,9 +44,14 @@ public class TxController {
     AjaxResponse<WeatherType> response = new AjaxResponse<>();
     
     try {
+      // 取得今日天氣
       WeatherType weather = weatherService.getTodayWeather(date);
+      
+      // 呼叫合約方法
       CallTransaction.Function function = CallTransaction.Function.fromSignature("insertWeather", "uint", "string");
       txService.addCallTx(env.getProperty("eth.contract.address"), function, date.toInstant().getEpochSecond(), weather.toString());
+      
+      // 回傳
       response.setData(weather);
     } catch (Exception e) {
       log.error("RenewWeather fail", e);
@@ -52,6 +60,9 @@ public class TxController {
     return response;
   }
 
+  /**
+   * 更新某日天氣至合約上
+   */
   @RequestMapping("/renew/weather/{dateStr}/{weather}")
   @ResponseBody
   public AjaxResponse<WeatherType> renewWeather(@PathVariable String dateStr, @PathVariable WeatherType weather) {
@@ -59,8 +70,11 @@ public class TxController {
     AjaxResponse<WeatherType> response = new AjaxResponse<>();
     
     try {
+      // 呼叫合約方法
       CallTransaction.Function function = CallTransaction.Function.fromSignature("insertWeather", "uint", "string");
       txService.addCallTx(env.getProperty("eth.contract.address"), function, date.toInstant().getEpochSecond(), weather.toString());
+      
+      // 回傳
       response.setData(weather);
     } catch (Exception e) {
       log.error("RenewWeather fail", e);
@@ -73,6 +87,10 @@ public class TxController {
   @ResponseBody
   public AjaxResponse<List<String>> txLogs() {
     return new AjaxResponse<>(EthereumAdapter.txLogs);
+  }
+  
+  public static void main(String[] args) {
+    System.out.println(LocalDate.parse("2016-12-01").atStartOfDay().atZone(ZoneId.of("UTC")).toInstant().getEpochSecond());
   }
   
 }
