@@ -8,6 +8,7 @@ import org.ethereum.core.CallTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -29,19 +30,19 @@ public class TxController {
   @Autowired
   private TxService txService;
   
-  @Autowired
-  private WeatherService weatherService;
+//  @Autowired
+//  private WeatherService weatherService;
 
-  @RequestMapping("/renew/weather")
+  @RequestMapping("/renew/weather/{date}/{weather}")
   @ResponseBody
-  public AjaxResponse<WeatherType> renewWeather() {
-    ZonedDateTime utcToday = ZonedDateTime.now(ZoneOffset.UTC);
+  public AjaxResponse<WeatherType> renewWeather(@PathVariable ZonedDateTime date, @PathVariable WeatherType weather) {
+//    ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
     AjaxResponse<WeatherType> response = new AjaxResponse<>();
     
     try {
-      WeatherType weather = weatherService.getTodayWeather(utcToday);
+//      WeatherType weather = weatherService.getTodayWeather(utcToday);
       CallTransaction.Function function = CallTransaction.Function.fromSignature("insertWeather", "uint", "string");
-      txService.addCallTx(env.getProperty("eth.contract.address"), function, utcToday.toInstant().getEpochSecond(), weather.toString());
+      txService.addCallTx(env.getProperty("eth.contract.address"), function, date.toInstant().getEpochSecond(), weather.toString());
       response.setData(weather);
     } catch (Exception e) {
       log.error("RenewWeather fail", e);
