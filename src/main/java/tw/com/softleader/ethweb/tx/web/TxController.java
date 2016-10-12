@@ -52,7 +52,7 @@ public class TxController {
     return response;
   }
 
-  @RequestMapping("/renew/weather/{date}/{weather}")
+  @RequestMapping("/renew/weather/{dateStr}/{weather}")
   @ResponseBody
   public AjaxResponse<WeatherType> renewWeather(@PathVariable String dateStr, @PathVariable WeatherType weather) {
     ZonedDateTime date = LocalDate.parse(dateStr).atStartOfDay().atZone(ZoneId.of("UTC"));
