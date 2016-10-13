@@ -128,12 +128,22 @@ $(function() {
 		$('#dataForm .button').prop('disable', false);
 		
 		// 發送事件綁定
-		$('#insertRainfall').bind('click', function() {
-			var data = {
-				date: $('#dataForm input[name="date"]').val(),
-				rainfall: $('#dataForm input[name="rainfall"]').val()
-			}
-			client.send("/websocket/insertRainfall", {}, JSON.stringify(data));
+		$("#insertRainfall").bind("click", function() {
+			$.ajax({
+				url: '<c:url value="/tx/renew/weather/"/>' + $('#dataForm input[name="date"]').val() + '/' + $('#dataForm input[name="rainfall"]').val(),
+				method: 'PUT',
+				contentType: 'application/json; charset=utf-8',
+			}).done(function(data, textStatus, jqXHR) {
+				if (data.messagesEmpty) {
+					$('#dataForm input').val('');
+					msg.info('雨量資料新增成功');
+				} else {
+					alertMessages(data.messages);
+				}
+			}).fail(function(jqXHR, textStatus, errorThrown) {
+				alertAjaxFail(jqXHR, textStatus, errorThrown);
+			}).always(function(data, textStatus, jqXHR) {
+			});
 		});
 		
 		// 頻道訂閱:onblock

@@ -39,6 +39,7 @@ public class TxController {
   @RequestMapping("/renew/rainfall")
   @ResponseBody
   public AjaxResponse<Integer> renewRainfall() {
+    log.info("renewRainfall today");
     ZonedDateTime date = LocalDate.now().atStartOfDay().atZone(ZoneId.of("UTC"));
     AjaxResponse<Integer> response = new AjaxResponse<>();
     
@@ -65,6 +66,7 @@ public class TxController {
   @RequestMapping("/renew/weather/{dateStr}/{rainfall}")
   @ResponseBody
   public AjaxResponse<Integer> renewWeather(@PathVariable String dateStr, @PathVariable Integer rainfall) {
+    log.info("renewRainfall date:{}, rainfall:{}", dateStr, rainfall);
     ZonedDateTime date = LocalDate.parse(dateStr).atStartOfDay().atZone(ZoneId.of("UTC"));
     AjaxResponse<Integer> response = new AjaxResponse<>();
     
