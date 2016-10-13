@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import tw.com.softleader.ethweb.policy.entity.EthWeatherPolicy;
+import tw.com.softleader.ethweb.policy.entity.EthRainfallPolicy;
 import tw.com.softleader.ethweb.policy.service.EthPolicyService;
 
 
@@ -19,7 +19,7 @@ public class IndexController {
 
   @RequestMapping("/")
   public String index(Model model) {
-    List<EthWeatherPolicy> policys = ethPolicyService.getAll();
+    List<EthRainfallPolicy> policys = ethPolicyService.getAll();
     model.addAttribute("policys", policys);
     return "index";
   }

@@ -54,6 +54,21 @@
 				</div>
 			</div>
 		</div>
+		<div class="ui red segment">
+			<form class="ui form" id="dataForm">
+				<div class="two fields">
+					<div class="field">
+						<label>Date</label>
+						<input type="date" name="date">
+					</div>
+					<div class="field">
+						<label>Rainfall</label>
+						<input type="number" name="rainfall">
+					</div>
+				</div>
+			</form>
+			<button class="ui primary button" id="insertRainfall">Submit</button>
+		</div>
 		<div class="ui blue segment">
 			<div class="ui list" id="policyList">
 				<c:forEach items="${policys}" var="item">
@@ -111,6 +126,20 @@ $(function() {
 	client.connect({}, function(frame) {
 		$('#dataForm .button').removeClass('disable');
 		$('#dataForm .button').prop('disable', false);
+		
+		// 發送事件綁定
+		$('#insertRainfall').bind('click', function() {
+			var data = {
+				date: $('#dataForm input[name="date"]').val(),
+				rainfall: $('#dataForm input[name="rainfall"]').val()
+			}
+			client.send("/websocket/insertRainfall", {}, JSON.stringify(data));
+		});
+		
+		// 頻道訂閱:onblock
+		client.subscribe('/topic/onInsertRainfall', function(data) {
+			$('#dataForm input').val('');
+	    });
 		
 		// 頻道訂閱:onblock
 		client.subscribe('/topic/onblock', function(data) {

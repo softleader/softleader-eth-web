@@ -1,5 +1,21 @@
 [
   {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_date",
+        "type": "uint256"
+      },
+      {
+        "name": "_rainfull",
+        "type": "uint256"
+      }
+    ],
+    "name": "insertRainfall",
+    "outputs": [],
+    "type": "function"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -29,8 +45,8 @@
       },
       {
         "indexed": false,
-        "name": "weatherType",
-        "type": "string"
+        "name": "rainfall",
+        "type": "uint256"
       },
       {
         "indexed": false,

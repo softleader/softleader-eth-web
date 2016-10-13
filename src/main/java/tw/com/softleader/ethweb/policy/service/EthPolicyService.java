@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import tw.com.softleader.commons.collect.Maps;
-import tw.com.softleader.ethweb.policy.entity.EthWeatherPolicy;
+import tw.com.softleader.ethweb.policy.entity.EthRainfallPolicy;
 
 /**
  * FIXME dummy now
@@ -17,15 +17,15 @@ import tw.com.softleader.ethweb.policy.entity.EthWeatherPolicy;
 @Service
 public class EthPolicyService {
   
-  private final Map<String, EthWeatherPolicy> datas = Maps.newHashMap();
+  private final Map<String, EthRainfallPolicy> datas = Maps.newHashMap();
   
-  public List<EthWeatherPolicy> getAll() {
+  public List<EthRainfallPolicy> getAll() {
     return datas.values().stream()
-      .sorted(Comparator.comparing(EthWeatherPolicy::getCreatedTime).reversed())
+      .sorted(Comparator.comparing(EthRainfallPolicy::getCreatedTime).reversed())
       .collect(Collectors.toList());
   }
 
-  public EthWeatherPolicy insert(EthWeatherPolicy entity) {
+  public EthRainfallPolicy insert(EthRainfallPolicy entity) {
     if (datas.containsKey(entity.getInsAddress())) {
       datas.remove(entity.getInsAddress());
     }

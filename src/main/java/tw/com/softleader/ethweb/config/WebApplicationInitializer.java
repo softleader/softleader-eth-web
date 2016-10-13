@@ -20,7 +20,7 @@ public class WebApplicationInitializer
 
   @Override
   protected Class<?>[] getServletConfigClasses() {
-    return new Class<?>[] {WebMvcConfig.class};
+    return new Class<?>[] {WebMvcConfig.class, WebSocketConfig.class};
   }
 
   @Override

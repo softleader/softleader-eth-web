@@ -2,25 +2,21 @@ package tw.com.softleader.ethweb.policy.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
 import tw.com.softleader.ethweb.config.Constants;
-import tw.com.softleader.ethweb.policy.enums.WeatherType;
 
 @SuppressWarnings("serial")
 @Setter
 @Getter
 @Entity
 @Table(name = "ETH_WEATHER_POLICY")
-public class EthWeatherPolicy extends EthPolicy {
+public class EthRainfallPolicy extends EthPolicy {
   
-  @Enumerated(EnumType.STRING)
-  @Column(name = "WEATHER_TYPE")
-  private WeatherType weatherType; // 天氣型別
+  @Column(name = "RAINFALL")
+  private int rainfall; // 降雨量
   
   @Override
   public String toString() {
@@ -29,7 +25,7 @@ public class EthWeatherPolicy extends EthPolicy {
           " ApplyDate=" + Constants.DATE_FORMATTER.format(applyDate) +
           " EffDate=" + Constants.DATE_FORMATTER.format(effDate) +
           " ExpDate=" + Constants.DATE_FORMATTER.format(expDate) +
-          " WeatherType=" + weatherType + 
+          " Rainfall=" + rainfall + 
           " Compensated=" + compensated + "]";
   }
   

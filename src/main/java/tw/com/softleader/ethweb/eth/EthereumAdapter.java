@@ -18,6 +18,7 @@ import org.ethereum.core.PendingState;
 import org.ethereum.core.Transaction;
 import org.ethereum.core.TransactionExecutionSummary;
 import org.ethereum.core.TransactionReceipt;
+import org.ethereum.crypto.ECKey;
 import org.ethereum.facade.Ethereum;
 import org.ethereum.listener.EthereumListener;
 import org.ethereum.listener.EthereumListenerAdapter;
@@ -316,7 +317,8 @@ public class EthereumAdapter implements Runnable {
           }
           
           // 對交易簽名
-          tx.sign(txp.getEcKey());
+          ECKey ecKey = txp.getEcKey();
+          tx.sign(ecKey);
           log.info("Sending Transaction: nonce:{}, value:{}, Gas:{}, GasPrice:{}, GasLimit{}", nonce, txp.getValue(), gas, ethereum.getGasPrice(), gasLimit);
           
           // 發送交易

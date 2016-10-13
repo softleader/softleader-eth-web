@@ -6,8 +6,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 import lombok.Setter;
-import tw.com.softleader.ethweb.policy.entity.EthWeatherPolicy;
-import tw.com.softleader.ethweb.policy.enums.WeatherType;
+import tw.com.softleader.ethweb.policy.entity.EthRainfallPolicy;
 
 @Setter
 public class EthWeatherPolicyModel {
@@ -22,12 +21,12 @@ public class EthWeatherPolicyModel {
   
   private int effDate;
   
-  private String weatherType;
+  private int rainfall;
   
   private boolean compensated;
   
-  public EthWeatherPolicy toEntity() {
-    EthWeatherPolicy entity = new EthWeatherPolicy();
+  public EthRainfallPolicy toEntity() {
+    EthRainfallPolicy entity = new EthRainfallPolicy();
     
     entity.setInsAddress(applyAddress);
     entity.setContractAddress(contractOwner);
@@ -35,7 +34,7 @@ public class EthWeatherPolicyModel {
     entity.setApplyDate(LocalDateTime.ofInstant(Instant.ofEpochSecond(applyDate), Clock.systemUTC().getZone()).toLocalDate());
     entity.setEffDate(LocalDateTime.ofInstant(Instant.ofEpochSecond(effDate), Clock.systemUTC().getZone()).toLocalDate());
     entity.setExpDate(LocalDateTime.ofInstant(Instant.ofEpochSecond(effDate), Clock.systemUTC().getZone()).toLocalDate());
-    entity.setWeatherType(WeatherType.valueOf(weatherType));
+    entity.setRainfall(rainfall);
     entity.setCompensated(compensated);
     
     return entity;

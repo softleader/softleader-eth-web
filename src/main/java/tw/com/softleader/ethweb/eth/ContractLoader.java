@@ -38,7 +38,7 @@ public class ContractLoader {
           new String(
               Files.readAllBytes(
                   Paths.get(
-                      EthereumAdapter.class.getClassLoader().getResource("contract/WeatherPolicy.json").toURI()
+                      EthereumAdapter.class.getClassLoader().getResource("contract/RainfallPolicy.json").toURI()
                   )
               )
           )
