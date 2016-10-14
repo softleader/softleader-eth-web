@@ -294,12 +294,13 @@ public class EthereumAdapter implements Runnable {
     @Override
     public void onBlock(Block block, List<TransactionReceipt> receipts) {
       // 區塊更新時，同時發布訊息至webSocket
-      msgSender.convertAndSend("/topic/onblock", new BlockInfo(block, syncPeerCnt.get(), syncManager.getLastKnownBlockNumber()));
+      int activePeers = ethereum.getChannelManager().getActivePeers().size();
+      msgSender.convertAndSend("/topic/onblock", new BlockInfo(block, activePeers, syncManager.getLastKnownBlockNumber()));
       bestBlock = block;
       
       // 有些行為必須在sync到最新block後在進行會比較好，例如log的顯示
       if (syncComplete) {
-        log.info("New block. peers: " + syncPeerCnt.get() + " block: " + block.getShortDescr());
+        log.info("New block. peers: " + activePeers + " block: " + block.getShortDescr());
 
         // 由程式發布的交易會先暫時包裝成TxPackage
         // 於sync完成後，取出來呼叫
@@ -310,6 +311,7 @@ public class EthereumAdapter implements Runnable {
           final long nonce = ethereum.getRepository().getNonce(txp.getEcKey().getAddress()).longValue();
           final long gasLimit = Long.parseLong(Hex.toHexString(ethereum.getBlockchain().getBestBlock().getGasLimit()), 16);
           final long gas = (long) (gasLimit * txp.getGasRatio());
+          
           if (txp.getFunction() == null) {
             tx = CallTransaction.createRawTransaction(nonce, ethereum.getGasPrice(), gas, txp.getToAddress(), txp.getValue(), null);
           } else {

@@ -4,6 +4,7 @@
 <link href='<c:url value="/resources/semantic/semantic.min.css" />' rel="stylesheet">
 <link href='<c:url value="/resources/datatables/dataTables.semanticui.min.css" />' rel="stylesheet">
 <link href='<c:url value="/resources/semantic/modules/calendar.css" />' rel="stylesheet">
+<link href='<c:url value="/resources/toastr-2.1.1/build/toastr.min.css" />' rel="stylesheet">
 
 <style>
 .ui.main.container {

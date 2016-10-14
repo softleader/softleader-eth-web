@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import tw.com.softleader.commons.function.Unchecked;
@@ -18,6 +19,9 @@ import tw.com.softleader.ethweb.policy.service.EthPolicyService;
 @Configuration
 @PropertySource({"classpath:ethereum.properties"})
 public class EthereumConfig extends DefaultConfig {
+
+  @Autowired
+  private Environment env;
   
   @Autowired
   private ContractLoader contractLoader;
@@ -33,7 +37,7 @@ public class EthereumConfig extends DefaultConfig {
     EthereumAdapter adapter = new EthereumAdapter();
     
     // 註冊需要監看的合約與事件
-    adapter.watchEvent("0a216A175526FF04520ffC3ea13F0f69D04eA085", Unchecked.accept(l -> {
+    adapter.watchEvent(env.getProperty("eth.contract.address"), Unchecked.accept(l -> {
       // 接收到logInfo後，首先要做的就是先將裡面的資料轉換成Java的物件
       // 此處需要借用到合約的介面來完成這件事
       final Invocation invocation = contractLoader.weatherPolicy.parseEvent(l);

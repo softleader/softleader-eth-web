@@ -54,7 +54,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="ui red segment">
+		<div class="ui green segment">
 			<form class="ui form" id="dataForm">
 				<div class="two fields">
 					<div class="field">
@@ -115,84 +115,99 @@
 
 <script>
 $(function() {
-	var socket = new SockJS('<c:url value="/websocket" />');
-	var client = Stomp.over(socket);
-	
-	// 覆寫debug訊息
-	client.debug = function(str) {
-	};
+	socketConnect();
 	
 	// websocket
-	client.connect({}, function(frame) {
-		$('#dataForm .button').removeClass('disable');
-		$('#dataForm .button').prop('disable', false);
+	function socketConnect() {
+		var socket = new SockJS('<c:url value="/websocket" />');
+		var client = Stomp.over(socket);
 		
-		// 發送事件綁定
-		$("#insertRainfall").bind("click", function() {
-			$.ajax({
-				url: '<c:url value="/tx/renew/weather/"/>' + $('#dataForm input[name="date"]').val() + '/' + $('#dataForm input[name="rainfall"]').val(),
-				method: 'PUT',
-				contentType: 'application/json; charset=utf-8',
-			}).done(function(data, textStatus, jqXHR) {
-				if (data.messagesEmpty) {
-					$('#dataForm input').val('');
-					msg.info('雨量資料新增成功');
-				} else {
-					alertMessages(data.messages);
-				}
-			}).fail(function(jqXHR, textStatus, errorThrown) {
-				alertAjaxFail(jqXHR, textStatus, errorThrown);
-			}).always(function(data, textStatus, jqXHR) {
-			});
-		});
-		
-		// 頻道訂閱:onblock
-		client.subscribe('/topic/onInsertRainfall', function(data) {
-			$('#dataForm input').val('');
-	    });
-		
-		// 頻道訂閱:onblock
-		client.subscribe('/topic/onblock', function(data) {
-			var blockInfo = JSON.parse(data.body);
-			if (blockInfo.number < blockInfo.lastKnownBlockNumber) {
-				$('#blockNum').text('#' + blockInfo.number + '/' + blockInfo.lastKnownBlockNumber);
-			} else {
-				$('#blockNum').text('#' + blockInfo.number);
-			}
-			$('#peers').text(blockInfo.peerCnt);
-			$('#lastSync').text('0s');
-			syncedSec = 0;
-	    });
-		
-		// 頻道訂閱:onevent
-		client.subscribe('/topic/onevent', function(data) {
-			var ethWeatherPolicy = JSON.parse(data.body);
-			if ($('#' + ethWeatherPolicy.insAddress).length > 0) {
-				$('#' + ethWeatherPolicy.insAddress).transition({
-					animation: 'fade left',
-					onComplete: function() {
-						$(this).remove();
-						insertItem(ethWeatherPolicy);
-					}
-				});
-			} else {
-				insertItem(ethWeatherPolicy);
-			}
-	    });
-		
-		function insertItem(ethWeatherPolicy) {
-			var $itemContent = $($('#policyItem').html()
-				.replace(/#insAddress#/g, ethWeatherPolicy.insAddress)
-				.replace(/#effDate#/g, ethWeatherPolicy.effDate)
-				.replace(/#weatherType#/g, ethWeatherPolicy.weatherType)
-				.replace(/#applyDate#/g, ethWeatherPolicy.applyDate)
-				.replace(/#compensated#/g, ethWeatherPolicy.compensated)
-			).hide();
+		// 覆寫debug訊息(不顯示)
+	 	client.debug = function(str) {
+	 	};
+
+		client.connect({}, function(frame) {
+			msg.success('Connect success');
+			$('#insertRainfall').removeClass('disabled');
+			$('#insertRainfall').prop('disabled', false);
 			
-			$('#policyList').prepend($itemContent);
-			$itemContent.transition('fade left');
-		}
-	});
+			// 發送事件綁定
+			$("#insertRainfall").bind("click", function() {
+				$.ajax({
+					url: '<c:url value="/tx/renew/weather/"/>' + $('#dataForm input[name="date"]').val() + '/' + $('#dataForm input[name="rainfall"]').val(),
+					method: 'PUT',
+					contentType: 'application/json; charset=utf-8',
+				}).done(function(data, textStatus, jqXHR) {
+					if (data.messagesEmpty) {
+						$('#dataForm input').val('');
+						msg.success('雨量資料新增成功');
+					} else {
+						alertMessages(data.messages);
+					}
+				}).fail(function(jqXHR, textStatus, errorThrown) {
+					alertAjaxFail(jqXHR, textStatus, errorThrown);
+				}).always(function(data, textStatus, jqXHR) {
+				});
+			});
+			
+			// 頻道訂閱:onblock
+			client.subscribe('/topic/onInsertRainfall', function(data) {
+				$('#dataForm input').val('');
+		    });
+			
+			// 頻道訂閱:onblock
+			client.subscribe('/topic/onblock', function(data) {
+				var blockInfo = JSON.parse(data.body);
+				if (blockInfo.number < blockInfo.lastKnownBlockNumber) {
+					$('#blockNum').text('#' + blockInfo.number + '/' + blockInfo.lastKnownBlockNumber);
+				} else {
+					$('#blockNum').text('#' + blockInfo.number);
+				}
+				$('#peers').text(blockInfo.peerCnt);
+				$('#lastSync').text('0s');
+				syncedSec = 0;
+		    });
+			
+			// 頻道訂閱:onevent
+			client.subscribe('/topic/onevent', function(data) {
+				var ethWeatherPolicy = JSON.parse(data.body);
+				if ($('#' + ethWeatherPolicy.insAddress).length > 0) {
+					$('#' + ethWeatherPolicy.insAddress).transition({
+						animation: 'fade left',
+						onComplete: function() {
+							$(this).remove();
+							insertItem(ethWeatherPolicy);
+						}
+					});
+				} else {
+					insertItem(ethWeatherPolicy);
+				}
+		    });
+			
+			function insertItem(ethWeatherPolicy) {
+				var $itemContent = $($('#policyItem').html()
+					.replace(/#insAddress#/g, ethWeatherPolicy.insAddress)
+					.replace(/#effDate#/g, ethWeatherPolicy.effDate)
+					.replace(/#weatherType#/g, ethWeatherPolicy.weatherType)
+					.replace(/#applyDate#/g, ethWeatherPolicy.applyDate)
+					.replace(/#compensated#/g, ethWeatherPolicy.compensated)
+				).hide();
+				
+				$('#policyList').prepend($itemContent);
+				$itemContent.transition('fade left');
+			}
+		}, function(message) {
+			$('#insertRainfall').addClass('disabled');
+			$('#insertRainfall').prop('disabled', true);
+			client.disconnect();
+	    	msg.error('Oops! some trouble with connection', ['Retry connect ASAP'], {
+	    		onHidden: function() {
+			    	socketConnect();
+			    	msg.warn('Reconnecting now');
+	    		}
+	    	});
+		});
+	}
 	
 	// 同步歷時
 	var syncedSec = 0;

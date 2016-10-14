@@ -66,14 +66,15 @@ public class TxController {
   @RequestMapping("/renew/weather/{dateStr}/{rainfall}")
   @ResponseBody
   public AjaxResponse<Integer> renewWeather(@PathVariable String dateStr, @PathVariable Integer rainfall) {
-    log.info("renewRainfall date:{}, rainfall:{}", dateStr, rainfall);
     ZonedDateTime date = LocalDate.parse(dateStr).atStartOfDay().atZone(ZoneId.of("UTC"));
+    long epochSecond = date.toInstant().getEpochSecond();
     AjaxResponse<Integer> response = new AjaxResponse<>();
-    
+
+    log.info("renewRainfall date:{}, rainfall:{}", epochSecond, rainfall);
     try {
       // 呼叫合約方法
-      CallTransaction.Function function = CallTransaction.Function.fromSignature("insertRainfall", "uint", "uint");
-      txService.addCallTx(env.getProperty("eth.contract.address"), function, date.toInstant().getEpochSecond(), rainfall);
+      CallTransaction.Function function = CallTransaction.Function.fromSignature("insertRainfall", "uint256", "uint256");
+      txService.addCallTx(env.getProperty("eth.contract.address"), function, epochSecond, rainfall);
       
       // 回傳
       response.setData(rainfall);
@@ -88,6 +89,11 @@ public class TxController {
   @ResponseBody
   public AjaxResponse<List<String>> txLogs() {
     return new AjaxResponse<>(EthereumAdapter.txLogs);
+  }
+  
+  public static void main(String[] args) {
+    ZonedDateTime date = LocalDate.parse("2016-10-01").atStartOfDay().atZone(ZoneId.of("UTC"));
+    System.out.println(date.toInstant().getEpochSecond());
   }
   
 }

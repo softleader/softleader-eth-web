@@ -9,6 +9,7 @@
 <script type="text/javascript" src='<c:url value="/resources/datatables/dataTables.semanticui.min.js" />'></script>
 <script type="text/javascript" src='<c:url value="/resources/json/form2js.js" />'></script>
 <script type="text/javascript" src='<c:url value="/resources/jquery/jquery.fileDownload.js" />'></script>
+<script type="text/javascript" src='<c:url value="/resources/toastr-2.1.1/build/toastr.min.js" />'></script>
 
 <script type="text/javascript" src='<c:url value="/resources/sockjs-client-1.1.0/dist/sockjs-1.1.0.min.js" />'></script>
 <script type="text/javascript" src='<c:url value="/resources/stomp-websocket-2.3.4/lib/stomp.min.js" />'></script>
@@ -23,11 +24,6 @@
 				</ul>
 			</div>
 		</div>
-	</div>
-	
-	<div class="ui floating message" name="msgbox" id="msgbox">
-		<i class="close icon"></i>
-		<div class="header"></div>
 	</div>
 	
 	<div class="ui small basic modal" name="confirmbox" id="confirmbox">
@@ -108,49 +104,48 @@
 
 	/** MsgBox功能 */
 	var msg = {
-		info: function(message, messages) {
-			showMsg($('#msgbox').clone().addClass('success'), message, messages);
+		info: function(message, messages, settings) {
+			showMsg('info', message, messages, settings);
 		},
-		warn: function(message, messages) {
-			showMsg($('#msgbox').clone().addClass('warning'), message, messages);
+		success: function(message, messages, settings) {
+			showMsg('success', message, messages, settings);
 		},
-		error: function(message, messages) {
-			showMsg($('#msgbox').clone().addClass('error'), message, messages);
+		warn: function(message, messages, settings) {
+			showMsg('warning', message, messages, settings);
 		},
-		confirm: function(message, messages, callback) {
+		error: function(message, messages, settings) {
+			showMsg('error', message, messages, settings);
+		},
+		confirm: function(message, messages, settings) {
 			showConfirm($('#confirmbox').clone(), message, messages, callback);
 		}
 	};
 
 	/** 顯示訊息 */
-	function showMsg($target, message, messages) {
-		$target.attr('id', '');
-		// 主要訊息
-		$target.find('.header').text(message);
-		// 列表訊息
-		if (messages && messages.length > 0) {
-			var $list = $('<ul class="list"></ul>');
-			messages.forEach(function(msg) {
-				$list.append($('<li></li>').text(msg));
-			})
-			$target.append($list);
+	function showMsg(type, message, messages, settings) {
+		toastr.options = {
+			  closeButton: false,
+			  debug: false,
+			  newestOnTop: true,
+			  progressBar: true,
+			  positionClass: "toast-top-right",
+			  preventDuplicates: false,
+			  showDuration: "300",
+			  hideDuration: "1000",
+			  timeOut: "5000",
+			  extendedTimeOut: "1000",
+			  showEasing: "swing",
+			  hideEasing: "linear",
+			  showMethod: "fadeIn",
+			  hideMethod: "fadeOut",
+			  onclick: null
+			};
+		$.extend(toastr.options, settings); // 套用客製化設定
+		if (messages && messages.length) {
+			toastr[type](messages.map(m => '·' + m).join('<br>'), message);
+		} else {
+			toastr[type](message);
 		}
-
-		// 雙擊後消失
-		$target.bind('dblclick', function() {
-			closeMsg($target);
-		});
-		// 點X後消失
-		$target.find('.close.icon').bind('click', function() {
-			closeMsg($target);
-		});
-
-		// 5秒後自動消失
-		closeMsgInterval($target);
-
-		// 初始化
-		$('body').append($target);
-		$target.transition('fade down');
 	}
 
 	/** 顯示訊息 */
