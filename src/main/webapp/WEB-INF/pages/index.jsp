@@ -82,7 +82,7 @@
 							</div>
 							<div class="description">
 								<span>EffDate: ${item.effDate}</span>
-								<span>Weather: ${item.weatherType}</span>
+								<span>Rainfall: ${item.rainfall} mm</span>
 							</div>
 						</div>
 					</div>
@@ -107,7 +107,7 @@
 			</div>
 			<div class="description">
 				<span>EffDate: #effDate#</span>
-				<span>Weather: #weatherType#</span>
+				<span>Rainfall: #rainfall# mm</span>
 			</div>
 		</div>
 	</div>
@@ -188,7 +188,7 @@ $(function() {
 				var $itemContent = $($('#policyItem').html()
 					.replace(/#insAddress#/g, ethWeatherPolicy.insAddress)
 					.replace(/#effDate#/g, ethWeatherPolicy.effDate)
-					.replace(/#weatherType#/g, ethWeatherPolicy.weatherType)
+					.replace(/#rainfall#/g, ethWeatherPolicy.rainfall)
 					.replace(/#applyDate#/g, ethWeatherPolicy.applyDate)
 					.replace(/#compensated#/g, ethWeatherPolicy.compensated)
 				).hide();
